@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','django-insecure-qabl)j-p8wteyuo296#@33@iw9^-je@%cc1!0kftg^i+_1p2-$')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+DEBUG = True
 ALLOWED_HOSTS = ['blitzz-blog.herokuapp.com','127.0.0.1']
 
 
