@@ -52,12 +52,14 @@ def user_login(request):
     else:
         return render(request, 'login.html')
         
+
 @login_required
 def user_logout(request):
     global is_login
     logout(request)
     is_login=False
     return HttpResponseRedirect(reverse('index'))
+
 
 def my_blogs(request):
     global is_login
@@ -129,8 +131,10 @@ def single_blog(request, post_id,comment_id):
     for post in posts:
         if post.id == post_id:
             single_post = post
-    if str(user).lower() == str(single_post.author).lower():
+    if is_login and str(user).lower() == str(single_post.author).lower():
         flag = True
+    else:
+        flag=False
     if request.method == 'POST' and request.POST.get('user_comment'):
         new_comment=Comment(post=single_post,author=user,text=request.POST['user_comment'],commented_date=timezone.localtime(timezone.now()))
         new_comment.save()
