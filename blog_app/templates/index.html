@@ -76,7 +76,7 @@
         {%if posts%}
 
         {%for post in posts%}
-        <div class="container mt-5 border border-info p-5 text-center">
+        <div class="container mt-5 border border-info p-5 text-center " style='overflow-wrap: break-word'>
             {%if post.blog_img%}
             <div class="row">
                 <div class="col-md-3"></div>
@@ -85,7 +85,7 @@
                 </div>
             </div>
             {%endif%}
-            <h1>Title:{{post.title}}</h1>
+            <h2><u>Title:{{post.title}}</u></h2>
             <h2>Author:{{post.author|capfirst}}</h2>
             <h5>Qualification:{{post.author.qualification}}</h5>
             <h5>Hashtags:{{post.hashtag}}</h5>
