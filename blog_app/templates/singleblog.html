@@ -1,0 +1,174 @@
+{%extends 'index.html'%}
+{%load static%}
+{%block title%}Blitzz | My Blogs{%endblock%}
+
+{%block body_block%}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<nav class=" navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <h2><a class="navbar-brand" href="{%url 'index'%}">BLITZZ</a></h2>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item ml-5">
+                    <a class=" nav-link active" href="{%url 'index'%}">Home<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item ml-5">
+                    <a class="nav-link" href="{%url 'posts'%}">Posts</a>
+                </li>
+                <li class="nav-item ml-5">
+                    <a class="nav-link" href="{%url 'my_blogs' %}">My Blogs</a>
+                </li>
+            </ul>
+
+            {%if is_login %}
+            <form class="form-inline my-2 my-lg-0" action='{%url "user_logout" %}'>
+                <button class="btn btn-danger my-2 my-sm-0" type="submit">Logout</button>
+
+            </form>
+            {%else%}
+            <form class="form-inline my-2 my-lg-0" action='{%url "user_login" %}'>
+                <button class="btn btn-success my-2 my-sm-0" type="submit">Sign In</button>
+            </form>
+            {%endif%}
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5 mb-5 border border-info p-5 ">
+    {%if post.blog_img%}
+    <img src='{{post.blog_img.url}}' class='img-fluid' />
+    {%endif%}
+    <h1 class='text-center mt-5'>Title:{{post.title}}</h1>
+    <h2>Author:{{post.author|capfirst}}</h2>
+    <h5><span style='font-size:35px'><u>Blog:</u></span>{{post.text}}</h5>
+
+    <h5><span style='font-size:35px'><u>Hashtags:</u></span>{{post.hashtag}}</h5>
+    <h5>Publication date:{{post.published_date}}</h5>
+
+    {%if flag%}
+    <a href="{%url 'editpost' post.id %}" class='btn btn-warning add'>Edit</a>
+
+    <button type="button" class="btn btn-danger btn-lg mt-3" style='margin-left: 46%;' data-toggle="modal"
+        data-target="#exampleModal">
+        Delete
+    </button>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete Post</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure to delete the post?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <form action="{%url 'delete_blog' post.id%}" method="POST">
+                        {%csrf_token%}
+                        <button type="submit" class="btn btn-danger">Yes,Delete blog</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {%endif%}
+    <div class="container mt-5">
+        <h2><u>Comments:</u></h2>
+        {%if comments%}
+        <ul class="list-group">
+            <li class='list-group-item'>
+                {%for comment,replies in finallist%}
+                <h4>By:{{comment.author|capfirst}}</h4>
+
+                <h4>{{comment.text}}</h4>
+                <p>On:{{comment.commented_date}}</p>
+                {%if flag%}
+                <form action="{%url 'single_blog' post.id comment.id %}" method="POST">
+                    {%csrf_token%}
+                    <button type="submit" class='btn btn-danger'>Delete</button>
+                </form>
+                {%endif%}
+
+
+                <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header text-center">
+                                <h4 class="modal-title w-100 font-weight-bold">Reply</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {%if is_login %}
+                            <form action="{%url 'single_blog' post.id comment.id%}" method="POST">
+                                {%csrf_token%}
+                                <div class="modal-body mx-3">
+                                    <div class="md-form mb-5">
+                                        <label data-error="wrong" data-success="right" for="reply">Reply
+                                            text:</label>
+                                        <input type="text" id="reply" class="form-control validate" name="reply"
+                                            placeholder="Enter your meassage" required>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer d-flex justify-content-center">
+                                    <button class="btn btn-info" type='submit'>Post Reply</button>
+                                </div>
+                            </form>
+                            {%else%}
+                            <h4 class='mt-3 text-center'><a href="{%url 'user_login'%}">Please login to post a reply</a>
+                            </h4>
+                            {%endif%}
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="text-center">
+                    <a href="" class="btn btn-warning btn-rounded mb-4" data-toggle="modal"
+                        data-target="#modalLoginForm">Reply</a>
+                </div>
+                <h3><u>Replies:</u></h3>
+                <ul class="list-group">
+                    {%for reply in replies%}
+                    <li class='list-group-item'>
+                        <h4>By:{{reply.author|capfirst}}</h4>
+                        <h5 class='ml-4'><span><u>Reply:</u></span>{{reply.text}}<span
+                                style='float:right'>On:{{reply.reply_date}}</span></h5>
+                        {%endfor%}
+                    </li>
+                </ul>
+                {%endfor%}
+            </li>
+        </ul>
+        {%else%}
+        <h4>0 Comments</h4>
+        {%endif%}
+        <h3 class='mt-5'> <u>Leave your comment here:</u>
+        </h3>
+        {%if is_login%}
+        <form action="" method='POST' class="mt-2">
+            {%csrf_token%}
+            <input type="text" class="form-control mt-4" name='user_comment' placeholder='Enter your comment' required>
+            <button type="submit" class='btn btn-info mt-3'>Add Comment</button>
+        </form>
+        {%else%}
+        <h3 class='mt-3'><a href="{%url 'user_login'%}">Please login to post a comment</a></h3>
+        {%endif%}
+    </div>
+
+</div>
+{%endblock%}

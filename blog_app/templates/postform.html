@@ -1,0 +1,55 @@
+{%extends 'index.html'%}
+
+{%block title_block%}Blitzz | Add Post{%endblock%}
+
+{%block body_block%}
+{%load static%}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <h2><a class="navbar-brand" href="{%url 'index'%}">BLITZZ</a></h2>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item ml-5 active">
+                    <a class=" nav-link" href="{%url 'index'%}">Home<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item ml-5">
+                    <a class="nav-link" href="{%url 'posts'%}">Posts</a>
+                </li>
+                <li class="nav-item ml-5">
+                    <a class="nav-link" href="{%url 'my_blogs' %}">My Blogs</a>
+                </li>
+            </ul>
+
+            {%if is_login %}
+            <form class="form-inline my-2 my-lg-0" action='{%url "user_logout" %}'>
+                <button class="btn btn-danger my-2 my-sm-0" type="submit">Logout</button>
+
+            </form>
+            {%else%}
+            <form class="form-inline my-2 my-lg-0" action='{%url "user_login" %}'>
+                <button class="btn btn-success my-2 my-sm-0" type="submit">Sign In</button>
+            </form>
+            {%endif%}
+        </div>
+    </div>
+</nav>
+
+
+<div class="container">
+    <img src="{%static 'add.png'%}" class='blog-img'>
+
+    <h1 class='display-4 text-center'>Add your post</h1>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {%csrf_token%}
+        {{post_form.as_p}}
+        <button type="submit" class='btn btn-info' style='margin-left: 45%;'>Publish</button>
+    </form>
+
+</div>
+{%endblock%}

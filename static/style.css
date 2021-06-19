@@ -1,0 +1,37 @@
+.add 
+{
+    color:white;
+    margin-left:auto;
+    margin-right:auto;
+    display:block;
+    width:20%;
+    text-align:center;
+    font-weight: bold;
+}
+
+.add:hover{
+    text-decoration: none;
+    color:white;
+}
+
+#id_username,#id_email,#id_password,#id_re_password
+{
+    padding:10px
+}
+
+.blog-img
+{
+    margin-right:auto;
+    margin-left: auto;
+    display:block;
+    height:600px;
+}
+
+@media only screen and (max-width:768px) {
+    .add{
+        width:40%}
+
+    .blog-img{
+        height:250px
+    }
+}

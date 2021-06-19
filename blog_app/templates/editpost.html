@@ -1,0 +1,62 @@
+{%extends 'index.html' %}
+{%block title_block%}Blitzz | Edit Post{%endblock%}
+
+{%block body_block%}
+{%load static%}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <h2><a class="navbar-brand" href="{%url 'index'%}">BLITZZ</a></h2>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item ml-5">
+                    <a class=" nav-link" href="{%url 'index'%}">Home<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item ml-5">
+                    <a class="nav-link" href="{%url 'posts'%}">Posts</a>
+                </li>
+                <li class="nav-item ml-5 active">
+                    <a class="nav-link" href="{%url 'my_blogs' %}">My Blogs</a>
+                </li>
+            </ul>
+
+            {%if is_login %}
+            <form class="form-inline my-2 my-lg-0" action='{%url "user_logout" %}'>
+                <button class="btn btn-danger my-2 my-sm-0" type="submit">Logout</button>
+
+            </form>
+            {%else%}
+            <form class="form-inline my-2 my-lg-0" action='{%url "user_login" %}'>
+                <button class="btn btn-success my-2 my-sm-0" type="submit">Sign In</button>
+            </form>
+            {%endif%}
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <img src="{%static 'edit.jpg'%}" class='blog-img'>
+    <h1 class='text-center'>Edit your blog:</h1>
+    <form action='' method='POST' enctype="multipart/form-data">
+        {%csrf_token%}
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" name='title' id="title" value={{post.title}}>
+        </div>
+        <div class="form-group">
+            <label for="blog">Blog:</label>
+            <textarea class="form-control" id="blog" name='blog' rows="15">{{post.text}}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="hashtag">Hashtag:</label>
+            <input type="text" class="form-control" name='hashtag' id="hashtag" value={{post.hashtag}}>
+        </div>
+        Blog img:<input type="file" name="blog_img" id="">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+{%endblock%}

@@ -1,0 +1,74 @@
+{%extends 'index.html' %}
+{%load static%}
+{%block title%}Blitzz | Login{%endblock%}
+{%block body_block%}
+<style>
+    img {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        height: 450px
+    }
+
+    @media only screen and (max-width:768px) {
+        img {
+            height: 50%;
+        }
+    }
+</style>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <h2><a class="navbar-brand" href="{%url 'index'%}">BLITZZ</a></h2>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item ml-5 active">
+                    <a class=" nav-link" href="{%url 'index'%}">Home<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item ml-5">
+                    <a class="nav-link" href="{%url 'posts'%}">Posts</a>
+                </li>
+                <li class="nav-item ml-5">
+                    <a class="nav-link" href="{%url 'my_blogs' %}">My Blogs</a>
+                </li>
+            </ul>
+
+            {%if is_login %}
+            <form class="form-inline my-2 my-lg-0" action='{%url "user_logout" %}'>
+                <button class="btn btn-danger my-2 my-sm-0" type="submit">Logout</button>
+
+            </form>
+            {%else%}
+            <form class="form-inline my-2 my-lg-0" action='{%url "user_login" %}'>
+                <button class="btn btn-success my-2 my-sm-0" type="submit">Sign In</button>
+            </form>
+            {%endif%}
+        </div>
+    </div>
+</nav>
+<div class="container" style='margin-top: 0%;'>
+    <img src="{%static 'login.jpg'%}" class='img'>
+    <form action='' method="POST">
+        {%csrf_token%}
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name='username' aria-describedby="emailHelp">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name='password'>
+        </div>
+        <button type="submit" class="btn btn-primary mb-4" style='margin-left:50%'>Submit</button>
+        <br>
+        <h4><a href="{%url 'register'%}" style="color:crimson;margin-left:37%;">Not an
+                existing
+                user??Register here</a>
+        </h4>
+    </form>
+</div>
+{%endblock%}

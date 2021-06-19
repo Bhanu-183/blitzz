@@ -1,0 +1,65 @@
+{%extends 'index.html'%}
+{%load static%}
+{%block title%}Blitzz | My Blogs{%endblock%}
+
+{%block body_block%}
+
+<nav class=" navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <h2><a class="navbar-brand" href="{%url 'index'%}">BLITZZ</a></h2>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item ml-5">
+                    <a class=" nav-link" href="{%url 'index'%}">Home<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item ml-5">
+                    <a class="nav-link" href="{%url 'posts'%}">Posts</a>
+                </li>
+                <li class="nav-item ml-5 active">
+                    <a class="nav-link" href="{%url 'my_blogs' %}">My Blogs</a>
+                </li>
+            </ul>
+
+            {%if is_login %}
+            <form class="form-inline my-2 my-lg-0" action='{%url "user_logout" %}'>
+                <button class="btn btn-danger my-2 my-sm-0" type="submit">Logout</button>
+
+            </form>
+            {%else%}
+            <form class="form-inline my-2 my-lg-0" action='{%url "user_login" %}'>
+                <button class="btn btn-success my-2 my-sm-0" type="submit">Sign In</button>
+            </form>
+            {%endif%}
+        </div>
+    </div>
+</nav>
+<img src="{%static 'person.jpg'%}" alt="" class="blog-img">
+<div class="container mt-5">
+    <h1 class="text-center display-4">Welcome {{user.username|capfirst}}</h1>
+
+    {%if posts%}
+    <h1 class='text-center'><u>Your Blogs</u></h1>
+    {%for post in posts%}
+    <div class="container mt-5 border border-info p-5 text-center">
+        <h1>Title:{{post.title}}</h1>
+        <h2>Author:{{post.author|capfirst}}</h2>
+        <h5>Qualification:{{post.author.qualification}}</h5>
+        <h5>Hashtags:{{post.hashtag}}</h5>
+        <h5>Publication date:{{post.published_date}}</h5>
+        <a href="{%url 'single_blog' post.id 0%}" class='btn btn-outline-dark mt-4'>See more</a>
+
+    </div>
+    {%endfor%}
+    {%else%}
+    <h1>You don't have any blogs!!</h1>
+    {%endif%}
+
+    <a href="{%url 'addpost'%}" class="btn btn-lg mt-5 mb-5 add" style='background-color: #2e2e2e;'>Add Blog</a>
+</div>
+{%endblock%}
