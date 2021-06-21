@@ -45,7 +45,7 @@
                     </li>
                 </ul>
 
-                {%if is_login %}
+                {%if user.is_authenticated %}
                 <form class="form-inline my-2 my-lg-0" action='{%url "user_logout" %}'>
                     <button class="btn btn-danger my-2 my-sm-0" type="submit">Logout</button>
 

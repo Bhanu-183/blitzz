@@ -139,7 +139,7 @@ def single_blog(request, post_id,comment_id):
         new_comment=Comment(post=single_post,author=user,text=request.POST['user_comment'],commented_date=timezone.localtime(timezone.now()))
         new_comment.save()
     elif request.method == 'POST' and request.POST.get('reply'):
-        temp_comment=Comment.objects.get(id=comment_id)
+        temp_comment = Comment.objects.get(id=comment_id)
         new_reply =Reply(comment=temp_comment,author=user,text=request.POST['reply'],reply_date=timezone.localtime(timezone.now()))
         new_reply.save()
     elif (request.method == 'POST'):
