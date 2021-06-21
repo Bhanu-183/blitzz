@@ -26,7 +26,7 @@
                 </li>
             </ul>
 
-            {%if user.is_authenticated %}
+            {%if user.is_login %}
             <form class="form-inline my-2 my-lg-0" action='{%url "user_logout" %}'>
                 <button class="btn btn-danger my-2 my-sm-0" type="submit">Logout</button>
 
@@ -101,7 +101,7 @@
                 {%endif%}
 
                 <div class="text-center">
-                    {%if user.is_authenticated%}
+                    {%if user.is_login%}
                     <form action="{%url 'single_blog' post.id comment.id%}" method="POST">
                         {%csrf_token%}
 
@@ -138,7 +138,7 @@
         {%endif%}
         <h3 class='mt-5'> <u>Leave your comment here:</u>
         </h3>
-        {%if user.is_authenticated%}
+        {%if user.is_login%}
         <form action="" method='POST' class="mt-2">
             {%csrf_token%}
             <input type="text" class="form-control mt-4" name='user_comment' placeholder='Enter your comment' required>
