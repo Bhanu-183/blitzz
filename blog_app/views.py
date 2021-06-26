@@ -7,10 +7,11 @@ from django.contrib.auth import authenticate, login
 from django.urls import reverse
 from django.utils import timezone
 from django.db.models import Q
-from django.http import HttpResponseRedirect,HttpResponse
+from django.http import HttpResponseRedirect,HttpResponse,JsonResponse
 from django.contrib.auth.decorators import login_required
 from blog_app.forms import UserForm,AuthorForm,PostForm
 from . import forms
+import json
 
 from django.views.generic import (TemplateView,ListView,DetailView)
 # Create your views here.
@@ -18,17 +19,7 @@ from django.views.generic import (TemplateView,ListView,DetailView)
 is_login=False
 user = ""
 
-def index(request):
-    global is_login
-    search_flag=False
-    if request.method=='POST':
-        search_key = request.POST['search']
-        search_key = search_key.lower()
-        search_flag=True
-        posts = Post.objects.filter(Q(title__icontains=search_key) | Q(hashtag__icontains=search_key))
-        return render(request,'index.html',context={'posts':posts,'is_login':is_login,'search_flag':search_flag,'search_key':search_key})
-    posts=Post.objects.order_by('-published_date')[:6]
-    return render(request,'index.html',context={'posts':posts,'is_login':is_login})
+
 
 def user_login(request):
     global is_login
@@ -36,6 +27,7 @@ def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        logout(request)
         user = authenticate(username=username, password=password)
         
         if user:
@@ -52,7 +44,20 @@ def user_login(request):
     else:
         return render(request, 'login.html')
         
+def index(request):
+    global is_login
+    search_flag=False
+    if request.method=='POST':
+        search_key = request.POST['search_key']
+        search_key = search_key.lower()
+        search_flag=True
+        posts = Post.objects.filter(Q(title__icontains=search_key) | Q(hashtag__icontains=search_key))
+        return render(request,'index.html',context={'posts':posts,'is_login':is_login,'search_flag':search_flag,'search_key':search_key})
+    posts=Post.objects.order_by('-published_date')[:6]
+    return render(request, 'index.html', context={'posts': posts, 'is_login': is_login})
+    
 
+    
 @login_required
 def user_logout(request):
     global is_login
@@ -192,3 +197,10 @@ def posts(request):
     posts=Post.objects.all()
     return render(request,'posts.html',context={'posts':posts,'is_login':is_login})    
 
+
+def search_posts(request):
+    if request.method == 'POST':
+        search_key = json.loads(request.body).get('search_key')
+        posts = Post.objects.filter(Q(title__icontains=search_key) | Q(hashtag__icontains=search_key))
+        data = posts.values()
+        return JsonResponse(list(data),safe=False)

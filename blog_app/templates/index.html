@@ -14,7 +14,6 @@
         integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'style.css' %}">
-    <link rel="stylesheet" href="{% static 'singleblog.css' %}">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
 
@@ -45,7 +44,7 @@
                     </li>
                 </ul>
 
-                {%if is_login %}
+                {%if user.is_authenticated %}
                 <form class="form-inline my-2 my-lg-0" action='{%url "user_logout" %}'>
                     <button class="btn btn-danger my-2 my-sm-0" type="submit">Logout</button>
 
@@ -65,34 +64,38 @@
         <h1 class="mt-5 display-4">Here are some of the latest blogs:</h1>
         <form action="" method="POST" autocomplete="off">
             {%csrf_token%}
-            <label for="search" style='font-size:x-large'><b>Search for blogs:</b></label>
-            <input type="text" id='search' class="form-control" name='search' placeholder='Search by title or hashtag'
-                value={{search_key|capfirst}}>
+            <label for="search_key" style='font-size:x-large'><b>Search for blogs:</b></label>
+            <input type="text" id='search_key' class="form-control" name='search_key'
+                placeholder='Search by title or hashtag' value={{search_key|capfirst}}>
             <input type="submit" value="Search" class='btn btn-danger mt-2 btn-lg' style='margin-left:46%'>
         </form>
+        <p id='result'></p>
+
         {%if search_flag%}
         <h3>Search results:</h3>
         {%endif%}
+        <div class="container-fluid"></div>
         {%if posts%}
-
-        {%for post in posts%}
-        <div class="container mt-5 border border-info p-5 text-center " style='overflow-wrap: break-word'>
-            {%if post.blog_img%}
-            <div class="row">
-                <div class="col-md-3"></div>
-                <div class="col-md-6 mb-5">
-                    <img src="{{post.blog_img.url}}" alt="" class="img-thumbnail">
+        <div class="container">
+            {%for post in posts%}
+            <div class="container mt-5 border border-info p-5 text-center" style='overflow-wrap: break-word'
+                id='contentblock'>
+                {%if post.blog_img%}
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6 mb-5">
+                        <img src="{{post.blog_img.url}}" alt="" class="img-thumbnail">
+                    </div>
                 </div>
+                {%endif%}
+                <h2><u>Title:{{post.title}}</u></h2>
+                <h2>Author:{{post.author|capfirst}}</h2>
+                <h5>Qualification:{{post.author.qualification}}</h5>
+                <h5>Hashtags:{{post.hashtag}}</h5>
+                <h5>Publication date:{{post.published_date}}</h5>
+                <a href="{%url 'single_blog' post.id 0%}" class='btn btn-outline-dark mt-4'>See more</a>
             </div>
-            {%endif%}
-            <h2><u>Title:{{post.title}}</u></h2>
-            <h2>Author:{{post.author|capfirst}}</h2>
-            <h5>Qualification:{{post.author.qualification}}</h5>
-            <h5>Hashtags:{{post.hashtag}}</h5>
-            <h5>Publication date:{{post.published_date}}</h5>
-            <a href="{%url 'single_blog' post.id 0%}" class='btn btn-outline-dark mt-4'>See more</a>
         </div>
-
         {%endfor%}
         {%else%}
         <h1>No blogs found based on your search request</h1>
@@ -101,7 +104,28 @@
     {%endblock%}
 
 </body>
+<script>
+    const searchfiled = document.querySelector('#search_key');
+    const result = document.querySelector('#result')
+    const content = document.querySelector('.container-fluid')
+    searchfiled.addEventListener('keyup', (e) => {
+        const searchValue = e.target.value;
+        if (searchValue.trim().length > 0) {
+            fetch('search_posts', {
+                body: JSON.stringify({ search_key: searchValue }),
+                method: 'POST'
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data[0])
+                    if (data.length === 0) {
+                        result.innerHTML = 'No search results'
+                    }
+                })
 
+        }
+    })
+</script>
 
 
 </html>
